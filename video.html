@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+
+<!-- Define our shaders -->
+<script id="vertex-shader" type="x-shader/x-vertex">
+
+    attribute vec4 vPosition; 
+    void main() { 
+        gl_Position = vPosition; 
+    }
+
+</script>
+
+<!-- 
+    u_Color is a mutable variable that we can set at
+    any time during rendering, so we are not forced to use
+    one static color.
+-->
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+    precision mediump float; 
+    uniform vec4 u_Color;
+    void main() { 
+        gl_FragColor = u_Color; 
+    }
+
+</script>
+
+<!-- Inclulde the three common libraries for WebGL -->
+<script src="../libraries/Common/webgl-utils.js"></script>
+<script src="../libraries/Common/initShaders.js"></script>
+<script src="../libraries/Common/MV.js"></script>
+
+<!-- Our drawing script -->
+<script src="./video.js"></script>
+</head>
+
+<body>
+    <canvas id="2d-canvas" width="1280" height="720">
+        Your browser does not support HTML5!
+    </canvas>
+
+    <canvas id="gl-canvas" width="1280" height="720">
+        Your browser does not support HTML5!
+    </canvas>
+</body>
+
+</html>
