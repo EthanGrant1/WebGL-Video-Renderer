@@ -114,7 +114,7 @@ window.onload = function init() {
     
     // Remove 2D canvas from view
     canvas2d.height = 0;
-    canvas2s.width = 0;
+    canvas2d.width = 0;
 
     // Create render using WebGL primatives
     // TODO: Move below code into render function
