@@ -97,8 +97,9 @@ window.onload = function init() {
                 }
             }
             
-            // console.log("image colors");
+            console.log("image colors: " + imageColors);
             images.push(imageColors);
+            console.log("images: " + images);
         };
         
         // console.log("setting image source");
@@ -112,6 +113,7 @@ window.onload = function init() {
            
     // console.log(images);
     
+    console.log("changing canvas size")
     // Remove 2D canvas from view
     canvas2d.height = 1;
     canvas2d.width = 1;
@@ -121,10 +123,12 @@ window.onload = function init() {
     //
     // beginRender()
 
-
+    console.log("rendering")
     // For each image in our image array
     for (let i = 0; i < images.length; i++) {
         
+        console.log("entering color data loop");
+
         // X by Y pixel canvas
         for (let x = 0; x < canvasGL.width; x++) {
             for (let y = 0; y < canvasGL.height; y++) {
