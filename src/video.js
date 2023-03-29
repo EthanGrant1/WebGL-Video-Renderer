@@ -107,7 +107,7 @@ window.onload = function init() {
         // image.crossOrigin = "";
 
         image.src = "./frames/frame" + i.toString() + ".jpg";
-        console.log(image.src);
+        // console.log(image.src);
     }
            
     // console.log(images);
@@ -131,8 +131,13 @@ window.onload = function init() {
                 
                 // Grab RGB values from color data and normalize to floats 0.0 - 1.0
                 let red     = images[i][x][y][0] / 255;
+                console.log("red: " + red.toString());
+
                 let green   = images[i][x][y][1] / 255;
+                console.log("green: " + green.toString());
+
                 let blue    = images[i][x][y][2] / 255;
+                console.log("blue: " + blue.toString());
 
                 // Set our color variable to values we grabbed from this pixel 
                 gl.uniform4f(u_Color, red, green, blue, 1);
