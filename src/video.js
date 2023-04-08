@@ -66,7 +66,7 @@ window.onload = function init() {
     var u_Color = gl.getUniformLocation(program, "u_Color");
     
     // Process images on 2D canvas
-    for (let i = 18; i < 19; i++) {
+    for (let i = 18; i < 28; i++) {
         
         let image = new Image();
 
@@ -220,4 +220,47 @@ function render_tri() {
     gl.drawArrays(gl.TRIANGLES, 0, 3);
 }
 
+function get_data(i) {
 
+    let image = new Image();
+
+    // Wait for image to load and then draw it to the canvas
+    image.onload = function() {
+
+        // console.log("drawing");
+        context2d.drawImage(image, 0, 0, canvas2d.width, canvas2d.height);
+
+
+        // console.log("getting image data");
+        // Grab pixel data from the image
+        let imageData = context2d.getImageData(0, 0, canvas2d.width, canvas2d.height);
+        let data = imageData.data;
+
+        let imageColors = []
+
+        for (let x = 0; x <= canvas2d.width; x++) {
+
+            imageColors.push([]);
+
+            for (let y = 0; y <= canvas2d.height; y++) {
+
+                imageColors[x].push([]);
+                let index = (canvas2d.width * x + y) * 4;
+            
+                imageColors[x][y].push(data[index], data[index + 1], data[index + 2], data[index + 3]);
+            }
+        }
+            
+        console.log("image colors: " + imageColors);
+        images.push(imageColors);
+        console.log("images: " + images);
+    };
+        
+    // console.log("setting image source");
+    // Source of the image in the frames folder
+        
+    // image.crossOrigin = "";
+
+    image.src = "./frames/frame" + i.toString() + ".jpg";
+    // console.log(image.src);
+}
