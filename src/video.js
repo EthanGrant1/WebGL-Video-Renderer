@@ -29,7 +29,9 @@ var xFac = 1/1280;
 var yFac = 1/720;
 
 // Array of all of our images colors
-var images = [];
+var images = Array.from(Array(720), () => new Array(1280));
+
+var images = Array(10);
 var dirLen = 6108;
 
 
@@ -64,55 +66,42 @@ window.onload = function init() {
     
     // Location of color var
     var u_Color = gl.getUniformLocation(program, "u_Color");
+    let imageColors = Array.from(Array(720), () => new Array(1280));   
     
     // Process images on 2D canvas
     for (let i = 18; i < 28; i++) {
-        
-        let image = new Image();
-
-        // Wait for image to load and then draw it to the canvas
-        image.onload = function() {
-
-            // console.log("drawing");
-            context2d.drawImage(image, 0, 0, canvas2d.width, canvas2d.height);
+        loadImage("frames/frame" + i.toString() + ".jpg")
+            .then((image) => {
+                // console.log("drawing");
+                context2d.drawImage(image, 0, 0, canvas2d.width, canvas2d.height);
 
 
-            // console.log("getting image data");
-            // Grab pixel data from the image
-            let imageData = context2d.getImageData(0, 0, canvas2d.width, canvas2d.height);
-            let data = imageData.data;
+                // console.log("getting image data");
+                // Grab pixel data from the image
+                let imageData = context2d.getImageData(0, 0, canvas2d.width, canvas2d.height);
+                let data = imageData.data;
 
-            let imageColors = []
 
-            for (let x = 0; x <= canvas2d.width; x++) {
+                for (let x = 0; x <= canvas2d.width; x++) {
+                    for (let y = 0; y <= canvas2d.height; y++) {
 
-                imageColors.push([]);
-
-                for (let y = 0; y <= canvas2d.height; y++) {
-
-                    imageColors[x].push([]);
-                    let index = (canvas2d.width * x + y) * 4;
+                        let index = (canvas2d.width * x + y) * 4;
             
-                    imageColors[x][y].push(data[index], data[index + 1], data[index + 2], data[index + 3]);
+                        imageColors[x][y].push(data[index], data[index + 1], data[index + 2], data[index + 3]);
+                    }
                 }
-            }
-            
-            console.log(imageColors);
-            images.push(imageColors);
-            console.log(images);
-        };
         
-        // console.log("setting image source");
-        // Source of the image in the frames folder
-        
-        // image.crossOrigin = "";
-
-        image.src = "./frames/frame" + i.toString() + ".jpg";
-        // console.log(image.src);
+                console.log("imageColors");
+                console.log(imageColors);
+                images.push(imageColors);
+                console.log("images");
+                console.log(images);
+            });
     }
            
     // console.log(images);
     
+    /*
     console.log("changing canvas size")
     // Remove 2D canvas from view
     canvas2d.height = 1;
@@ -122,7 +111,8 @@ window.onload = function init() {
     // TODO: Move below code into render function
     //
     // beginRender()
-
+    
+    
     console.log("rendering")
     // For each image in our image array
     for (let i = 0; i < images.length; i++) {
@@ -176,7 +166,30 @@ window.onload = function init() {
             }
         }
     }
+    */
 };
+
+function loadImage(src) {
+    // Because we require multiple images to be loaded in,
+    // we need to ensure that the image we are processing
+    // is fully loaded before moving onto the next.
+    return new Promise((res) => {
+
+        // Create empty image variable
+        const image = new Image();
+
+        // On load
+        image.addEventListener('load', () => {
+
+            // We give back the image by invoking this method.
+            // We are ready to use .then on the image
+            resolve(image);
+        });
+
+        // Start the loading process and populate the image
+        image.src = src;
+    });
+}
 
 function beginRender() {
     render = setInterval(function() {
@@ -218,49 +231,4 @@ function load_and_set(gl, vertdata, program) {
 // Render a triangle
 function render_tri() {
     gl.drawArrays(gl.TRIANGLES, 0, 3);
-}
-
-function get_data(i) {
-
-    let image = new Image();
-
-    // Wait for image to load and then draw it to the canvas
-    image.onload = function() {
-
-        // console.log("drawing");
-        context2d.drawImage(image, 0, 0, canvas2d.width, canvas2d.height);
-
-
-        // console.log("getting image data");
-        // Grab pixel data from the image
-        let imageData = context2d.getImageData(0, 0, canvas2d.width, canvas2d.height);
-        let data = imageData.data;
-
-        let imageColors = []
-
-        for (let x = 0; x <= canvas2d.width; x++) {
-
-            imageColors.push([]);
-
-            for (let y = 0; y <= canvas2d.height; y++) {
-
-                imageColors[x].push([]);
-                let index = (canvas2d.width * x + y) * 4;
-            
-                imageColors[x][y].push(data[index], data[index + 1], data[index + 2], data[index + 3]);
-            }
-        }
-            
-        console.log("image colors: " + imageColors);
-        images.push(imageColors);
-        console.log("images: " + images);
-    };
-        
-    // console.log("setting image source");
-    // Source of the image in the frames folder
-        
-    // image.crossOrigin = "";
-
-    image.src = "./frames/frame" + i.toString() + ".jpg";
-    // console.log(image.src);
 }
