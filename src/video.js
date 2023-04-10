@@ -173,7 +173,7 @@ function loadImage(src) {
     // Because we require multiple images to be loaded in,
     // we need to ensure that the image we are processing
     // is fully loaded before moving onto the next.
-    return new Promise((res) => {
+    return new Promise((resolve) => {
 
         // Create empty image variable
         const image = new Image();
