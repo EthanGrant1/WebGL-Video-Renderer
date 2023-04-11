@@ -91,13 +91,13 @@ window.onload = function init() {
                     }
                 }
         
-                /* 
+                 
                 console.log("imageColors");
                 console.log(imageColors);
                 images.push(imageColors);
                 console.log("images");
                 console.log(images);
-                */
+                
             });
     }
            
