@@ -29,7 +29,7 @@ var xFac = 1/1280;
 var yFac = 1/720;
 
 // Array of all of our images colors
-var images = Array.from(Array(720), () => new Array(1280));
+var images = Array(720).fill().map(() => Array(1280));
 
 var images = Array(10);
 var dirLen = 6108;
@@ -170,25 +170,12 @@ window.onload = function init() {
 };
 
 function loadImage(src) {
-    // Because we require multiple images to be loaded in,
-    // we need to ensure that the image we are processing
-    // is fully loaded before moving onto the next.
-    return new Promise(function(resolve, reject) => {
-
-        // Create empty image variable
-        const image = new Image();
-
-        // On load
-        image.addEventListener('load', () => {
-
-            // We give back the image by invoking this method.
-            // We are ready to use .then on the image
-            resolve(image);
-        });
-
-        // Start the loading process and populate the image
-        image.src = src;
-    });
+  return new Promise((resolve, reject) => {
+    const img = document.createElement("img");
+    img.src = src;
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+  });
 }
 
 function beginRender() {
