@@ -102,12 +102,12 @@ window.onload = function init() {
     }
            
     // console.log(images);
-    
+    /*
     console.log("changing canvas size")
     // Remove 2D canvas from view
     canvas2d.height = 1;
     canvas2d.width = 1;
-
+    */
     // Create render using WebGL primatives
     // TODO: Move below code into render function
     //
