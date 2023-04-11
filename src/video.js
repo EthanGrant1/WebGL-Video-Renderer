@@ -64,7 +64,9 @@ window.onload = function init() {
     
     // Location of color var
     var u_Color = gl.getUniformLocation(program, "u_Color");
-    let imageColors = Array.from(Array(720), () => new Array(1280)); 
+    let imageColors = Array.from(Array(720), () => new Array(1280));
+    console.log("image colors");
+    console.log(imageColors);
     
     // Process images on 2D canvas
     for (let i = 18; i < 28; i++) {
@@ -80,8 +82,8 @@ window.onload = function init() {
                 let data = imageData.data;
 
 
-                for (let x = 0; x <= imageColors.length; x++) {
-                    for (let y = 0; y <= imageColors[x].length; y++) {
+                for (let x = 0; x < imageColors.length; x++) {
+                    for (let y = 0; y < imageColors[x].length; y++) {
 
                         let index = (canvas2d.width * x + y) * 4;
             
