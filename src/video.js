@@ -69,7 +69,7 @@ window.onload = function init() {
     console.log(imageColors);
     
     // Process images on 2D canvas
-    for (let i = 18; i < 28; i++) {
+    for (let i = 18; i < 19; i++) {
         loadImage("frames/frame" + i.toString() + ".jpg")
             .then((image) => {
                 // console.log("drawing");
@@ -113,7 +113,6 @@ window.onload = function init() {
     //
     // beginRender()
     
-    /*
     console.log("rendering")
     // For each image in our image array
     for (let i = 0; i < images.length; i++) {
@@ -167,7 +166,6 @@ window.onload = function init() {
             }
         }
     }
-    */
 };
 
 // This function loads images asynchronously and returns them as a promise
