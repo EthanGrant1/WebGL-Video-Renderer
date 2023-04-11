@@ -29,7 +29,7 @@ var xFac = 1/1280;
 var yFac = 1/720;
 
 // This will contain all of our image data
-var images = Array(10);
+var images = []
 var dirLen = 6108;
 
 
@@ -87,21 +87,22 @@ window.onload = function init() {
 
                         let index = (canvas2d.width * x + y) * 4;
             
-                        imageColors[x][y] = data[index], data[index + 1], data[index + 2], data[index + 3];
+                        imageColors[x][y] = [data[index], data[index + 1], data[index + 2], data[index + 3]];
                     }
                 }
         
+                /* 
                 console.log("imageColors");
                 console.log(imageColors);
                 images.push(imageColors);
                 console.log("images");
                 console.log(images);
+                */
             });
     }
            
     // console.log(images);
     
-    /*
     console.log("changing canvas size")
     // Remove 2D canvas from view
     canvas2d.height = 1;
@@ -112,7 +113,7 @@ window.onload = function init() {
     //
     // beginRender()
     
-    
+    /*
     console.log("rendering")
     // For each image in our image array
     for (let i = 0; i < images.length; i++) {
