@@ -28,9 +28,7 @@ var frame = 0;
 var xFac = 1/1280;
 var yFac = 1/720;
 
-// Array of all of our images colors
-var images = Array(720).fill().map(() => Array(1280));
-
+// This will contain all of our image data
 var images = Array(10);
 var dirLen = 6108;
 
@@ -82,8 +80,8 @@ window.onload = function init() {
                 let data = imageData.data;
 
 
-                for (let x = 0; x <= canvas2d.width; x++) {
-                    for (let y = 0; y <= canvas2d.height; y++) {
+                for (let x = 0; x <= imageColors.length; x++) {
+                    for (let y = 0; y <= imageColors[x].length; y++) {
 
                         let index = (canvas2d.width * x + y) * 4;
             
@@ -169,13 +167,24 @@ window.onload = function init() {
     */
 };
 
+// This function loads images asynchronously and returns them as a promise
 function loadImage(src) {
-  return new Promise((resolve, reject) => {
-    const img = document.createElement("img");
-    img.src = src;
-    img.onload = () => resolve(img);
-    img.onerror = reject;
-  });
+
+    // Return a promise with two instance variables that
+    // will be used to determine the state of the image object
+    return new Promise((resolve, reject) => {
+        // Instantiate a blank image object
+        const img = new Image();
+
+        // Point to the file of a particular image
+        img.src = src;
+
+        // Resolve the promise and return the image object
+        img.onload = () => resolve(img);
+
+        // If something goes wrong, the promise is rejected
+        img.onerror = reject;
+    });
 }
 
 function beginRender() {
