@@ -77,7 +77,7 @@ window.onload = async function init() {
 
     // Process images on 2D canvas
     Promise.all(promises).then(
-        (images) =>
+        (images) => {
             images.forEach(
                 (image) => {
                 
@@ -111,7 +111,7 @@ window.onload = async function init() {
                     console.log(images);
                     console.log("Image processed: Image #" + processed.toString());
                     processed++;
-                });              
+                }});              
     
            
     // console.log(images);
