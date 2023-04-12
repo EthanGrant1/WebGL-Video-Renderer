@@ -30,6 +30,7 @@ var yFac = 1/720;
 
 // This will contain all of our image data
 var images = [];
+var promises = [];
 var processed = 0;
 var dirLen = 6108;
 
@@ -37,7 +38,7 @@ var dirLen = 6108;
 // Exectutes WebGL code after webpage is loaded, so we can
 // execute this code anywhere in our webpage and wait until
 // the canvas is ready.
-window.onload = function init() { 
+window.onload = async function init() { 
 
     // Set up our canvases
     canvas2d = document.getElementById('2d-canvas');
@@ -69,58 +70,53 @@ window.onload = function init() {
     console.log("image colors");
     console.log(imageColors);
     
-    // Process images on 2D canvas
+
     for (let i = 18; i < 19; i++) {
-
-        // Load image and await a promise
-        loadImage("frames/frame" + i.toString() + ".jpg")
-
-            // Then with image as the result
-            .then((image) => {
-                // console.log("drawing");
-                
-                // Draw the image to the 2D canvas
-                context2d.drawImage(image, 0, 0, canvas2d.width, canvas2d.height);
-
-                // console.log("getting image data");
-
-                // Grab pixel data from the image
-                let imageData = context2d.getImageData(0, 0, canvas2d.width, canvas2d.height);
-                let data = imageData.data;
-
-                // Iterate over the pixels of the image
-                for (let x = 0; x < imageColors.length; x++) {
-                    for (let y = 0; y < imageColors[x].length; y++) {
-                        
-                        // Because image data is returned as one contiguous array of numbers,
-                        // we must iterate over 4 elements at a time. The array follows the structure:
-                        // [R, G, B, A, ... R, G, B, A, ... R, G, B, A]
-                        let index = (canvas2d.width * x + y) * 4;
-                        
-                        // Grab the important values of our image color.
-                        imageColors[x][y] = [data[index], data[index + 1], data[index + 2], data[index + 3]];
-                    }
-                }
-        
-                console.log("imageColors");
-                console.log(imageColors);
-                images.push(imageColors);
-                console.log("images");
-                console.log(images);
-                
-            })
-            
-            // Increment the processed image counter
-            .then(() => {
-                processed++;
-                console.log("Image processed: Image #" + processed.toString());
-            });
+        promises.push(loadImage("frames/frame" + i.toString() + ".jpg"));
     }
+
+    // Process images on 2D canvas
+    Promise.all(promises).then(
+        (images) =>
+            images.forEach(
+                (image) =>
+                
+                    // Draw the image to the 2D canvas
+                    context2d.drawImage(image, 0, 0, canvas2d.width, canvas2d.height);
+
+                    // console.log("getting image data");
+
+                    // Grab pixel data from the image
+                    let imageData = context2d.getImageData(0, 0, canvas2d.width, canvas2d.height);
+                    let data = imageData.data;
+
+                    // Iterate over the pixels of the image
+                    for (let x = 0; x < imageColors.length; x++) {
+                        for (let y = 0; y < imageColors[x].length; y++) {
+                        
+                            // Because image data is returned as one contiguous array of numbers,
+                            // we must iterate over 4 elements at a time. The array follows the structure:
+                            // [R, G, B, A, ... R, G, B, A, ... R, G, B, A]
+                            let index = (canvas2d.width * x + y) * 4;
+                        
+                            // Grab the important values of our image color.
+                            imageColors[x][y] = [data[index], data[index + 1], data[index + 2], data[index + 3]];
+                        }
+                    }
+        
+                    console.log("imageColors");
+                    console.log(imageColors);
+                    images.push(imageColors);
+                    console.log("images");
+                    console.log(images);
+                    console.log("Image processed: Image #" + processed.toString());
+                    processed++;
+                );              
+    
            
     // console.log(images);
     
     // While images are still being processed, we will await them to complete
-    while (processed < 1);
 
     /*
     console.log("changing canvas size")
@@ -191,7 +187,7 @@ window.onload = function init() {
     */
 };
 
-// This function loads images asynchronously and returns them as a promise
+// This function loads images asynchronously and returns them through a promise
 function loadImage(src) {
 
     // Return a promise with two instance variables that
