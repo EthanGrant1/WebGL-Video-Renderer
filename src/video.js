@@ -79,7 +79,7 @@ window.onload = async function init() {
     Promise.all(promises).then(
         (images) =>
             images.forEach(
-                (image) =>
+                (image) => {
                 
                     // Draw the image to the 2D canvas
                     context2d.drawImage(image, 0, 0, canvas2d.width, canvas2d.height);
@@ -111,7 +111,7 @@ window.onload = async function init() {
                     console.log(images);
                     console.log("Image processed: Image #" + processed.toString());
                     processed++;
-                );              
+                });              
     
            
     // console.log(images);
