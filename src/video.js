@@ -117,6 +117,9 @@ window.onload = function init() {
                             imageColors[x][y] = [data[index], data[index + 1], data[index + 2], data[index + 3]];
                         }
                     }
+
+                    // Add this to our images array for drawing
+                    myImages.push(imageColors);
                     
                     /* debug print statements
                      *
