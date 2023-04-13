@@ -14,6 +14,8 @@ var canvas2d;
 
 // Canvas used to draw WebGL primatives
 var canvasGL;
+
+// Important variables for GL canvas
 var gl;
 var render;
 var vertdata;   
@@ -31,8 +33,12 @@ var yFac = 1/720;
 
 // This will contain all of our image data
 var myImages = [];
+
+// Promises that will resolve to our images
 var promises = [];
-var processed = 0;
+
+// Number of processed images and total number of images
+// var processed = 0;
 var dirLen = 6108;
 
 
@@ -71,15 +77,21 @@ window.onload = function init() {
     console.log("image colors");
     console.log(imageColors);
     
-
+    // Load all of images and place them in an array of promises
     for (let i = 18; i < 19; i++) {
         promises.push(loadImage("frames/frame" + i.toString() + ".jpg"));
     }
 
-    // Process images on 2D canvas
+    // Await all image loading promises to resolve
     Promise.all(promises).then(
+
+        // With the promises collection as "images"
         (images) => {
+
+            // For each image
             images.forEach(
+
+                // With our image file as "image"
                 (image) => {
                 
                     // Draw the image to the 2D canvas
@@ -101,37 +113,46 @@ window.onload = function init() {
                             let index = (canvas2d.width * x + y) * 4;
                         
                             // Grab the important values of our image color.
+                            // We will default to using max alpha value 1.0
                             imageColors[x][y] = [data[index], data[index + 1], data[index + 2], data[index + 3]];
                         }
                     }
-        
-                    console.log("imageColors");
-                    console.log(imageColors);
-                    myImages.push(imageColors);
-                    console.log("images");
-                    console.log(myImages);
-                    console.log("Image processed: Image #" + processed.toString());
-                    processed++;
+                    
+                    /* debug print statements
+                     *
+                     * console.log("imageColors");
+                     * console.log(imageColors);
+                     * myImages.push(imageColors);
+                     * console.log("images");
+                     * console.log(myImages);
+                     * console.log("Image processed: Image #" + processed.toString());
+                     * processed++;
+                     */
                 })
-        }).then(
-            () => {
-                console.log("rendering");
-                
-                gl.uniform4f(u_Color, 1, 0, 1, 1);
 
-                vertdata = [vec2(-1, 1), vec2(1, 1), vec2(-1, -1)];
-                load_and_set(gl, vertdata, program); 
-                render_tri();
+        // After all images are processed for their data
+        }).then(() => {
                 
-                vertdata = [vec2(1, 1), vec2(-1, -1), vec2(1, -1)];
-                load_and_set(gl, vertdata, program); 
-                render_tri();
+                /* debug testing WebGL canvas
+                 *
+                 * console.log("rendering");
+                 * 
+                 * gl.uniform4f(u_Color, 1, 0, 1, 1);
+                 * 
+                 * vertdata = [vec2(-1, 1), vec2(1, 1), vec2(-1, -1)];
+                 * load_and_set(gl, vertdata, program); 
+                 * render_tri();
+                 * 
+                 * vertdata = [vec2(1, 1), vec2(-1, -1), vec2(1, -1)];
+                 * load_and_set(gl, vertdata, program); 
+                 * render_tri();
+                 */
 
-                /* 
+                 
                 // For each image in our image array
                 for (let i = 0; i < myImages.length; i++) {
         
-                    console.log("entering color data loop");
+                    // console.log("entering color data loop");
 
                     // X by Y pixel canvas
                     for (let x = 0; x < canvasGL.width; x++) {
@@ -150,14 +171,16 @@ window.onload = function init() {
                             // Set our color variable to values we grabbed from this pixel 
                             gl.uniform4f(u_Color, red, green, blue, 1);
                 
-                            // Positions of vertices
+                            // Positions of vertices on shared edge.
+                            // Using x and y factors to normalize to values 0-1
                             let top_right_corner = vec2((x + 1) * xFac, y * yFac);
                             let bottom_left_corner = vec2(x * xFac, (y + 1) * yFac);
-
+                            
+                            // Prepare and render two triangles to form this square
                             load_and_set(
                                 gl, 
                                 [
-                                    vec2(x * xFac, y * yFac),
+                                    vec2(x * xFac, y * yFac),   // top left
                                     top_right_corner,
                                     bottom_left_corner
                                 ],
@@ -169,9 +192,9 @@ window.onload = function init() {
                             load_and_set(
                                 gl,
                                 [
-                                    bottom_left_corner,
                                     top_right_corner,
-                                    vec2((x + 1) * xFac, (y + 1) * yFac)
+                                    bottom_left_corner,
+                                    vec2((x + 1) * xFac, (y + 1) * yFac)    // bottom right
                                 ],
                                 program
                             );
@@ -180,10 +203,7 @@ window.onload = function init() {
                         }
                     }
                 }
-
-                */
-            });              
-           
+            }); 
 };
 
 // This function loads images asynchronously and returns them through a promise
@@ -243,7 +263,5 @@ function load_and_set(gl, vertdata, program) {
     gl.enableVertexAttribArray(vPosition); 
 }
 
-// Render a triangle
-function render_tri() {
-    gl.drawArrays(gl.TRIANGLES, 0, vertdata.length);
-}
+// Render a triangle given our vertex data
+function render_tri() { gl.drawArrays(gl.TRIANGLES, 0, vertdata.length); }
