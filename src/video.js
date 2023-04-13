@@ -148,11 +148,11 @@ window.onload = function init() {
                  * render_tri();
                  */
 
-                 
+                console.log("here 1")
                 // For each image in our image array
                 for (let i = 0; i < myImages.length; i++) {
         
-                    // console.log("entering color data loop");
+                    console.log("entering color data loop");
 
                     // X by Y pixel canvas
                     for (let x = 0; x < canvasGL.width; x++) {
