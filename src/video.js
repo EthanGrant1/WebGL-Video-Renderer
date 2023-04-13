@@ -115,8 +115,34 @@ window.onload = async function init() {
         }).then(
             () => {
                 console.log("rendering");
+                
+                gl.uniform4f(u_Color, 1, 0, 1, 1);
+                            load_and_set(
+                                gl, 
+                                [
+                                    vec2(-1, 1),
+                                    vec2(1, -1),
+                                    vec2(-1, -1)
+                                ],
+                                program
+                            );
 
-    
+                            render_tri();
+
+                            load_and_set(
+                                gl,
+                                [
+                                    vec2(-1, -1),
+                                    vec2(1, 1),
+                                    vec2(1, -1)
+                                ],
+                                program
+                            );
+
+                            render_tri();
+
+
+                /* 
                 // For each image in our image array
                 for (let i = 0; i < myImages.length; i++) {
         
@@ -169,6 +195,8 @@ window.onload = async function init() {
                         }
                     }
                 }
+
+                */
             });              
            
 };
