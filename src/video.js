@@ -29,7 +29,7 @@ var xFac = 1/1280;
 var yFac = 1/720;
 
 // This will contain all of our image data
-var images = [];
+var myImages = [];
 var promises = [];
 var processed = 0;
 var dirLen = 6108;
@@ -106,9 +106,9 @@ window.onload = async function init() {
         
                     console.log("imageColors");
                     console.log(imageColors);
-                    images.push(imageColors);
+                    myImages.push(imageColors);
                     console.log("images");
-                    console.log(images);
+                    console.log(myImages);
                     console.log("Image processed: Image #" + processed.toString());
                     processed++;
                 })});              
@@ -131,9 +131,9 @@ window.onload = async function init() {
     
     console.log("rendering");
 
-    /*
+    
     // For each image in our image array
-    for (let i = 0; i < images.length; i++) {
+    for (let i = 0; i < myImages.length; i++) {
         
         console.log("entering color data loop");
 
@@ -142,13 +142,13 @@ window.onload = async function init() {
             for (let y = 0; y < canvasGL.height; y++) {
                 
                 // Grab RGB values from color data and normalize to floats 0.0 - 1.0
-                let red     = images[i][x][y][0] / 255;
+                let red     = myImages[i][x][y][0] / 255;
                 console.log("red: " + red.toString());
 
-                let green   = images[i][x][y][1] / 255;
+                let green   = myImages[i][x][y][1] / 255;
                 console.log("green: " + green.toString());
 
-                let blue    = images[i][x][y][2] / 255;
+                let blue    = myImages[i][x][y][2] / 255;
                 console.log("blue: " + blue.toString());
 
                 // Set our color variable to values we grabbed from this pixel 
@@ -184,7 +184,6 @@ window.onload = async function init() {
             }
         }
     }
-    */
 };
 
 // This function loads images asynchronously and returns them through a promise
