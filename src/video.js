@@ -16,6 +16,7 @@ var canvas2d;
 var canvasGL;
 var gl;
 var render;
+var vertdata;   
 
 // Contexts used to draw images to the canvas
 var context2d;
@@ -38,7 +39,7 @@ var dirLen = 6108;
 // Exectutes WebGL code after webpage is loaded, so we can
 // execute this code anywhere in our webpage and wait until
 // the canvas is ready.
-window.onload = async function init() { 
+window.onload = function init() { 
 
     // Set up our canvases
     canvas2d = document.getElementById('2d-canvas');
@@ -117,30 +118,14 @@ window.onload = async function init() {
                 console.log("rendering");
                 
                 gl.uniform4f(u_Color, 1, 0, 1, 1);
-                            load_and_set(
-                                gl, 
-                                [
-                                    vec2(-1, 1),
-                                    vec2(1, -1),
-                                    vec2(-1, -1)
-                                ],
-                                program
-                            );
 
-                            render_tri();
-
-                            load_and_set(
-                                gl,
-                                [
-                                    vec2(-1, -1),
-                                    vec2(1, 1),
-                                    vec2(1, -1)
-                                ],
-                                program
-                            );
-
-                            render_tri();
-
+                vertdata = [vec2(-1, 1), vec2(1, -1), vec2(-1, -1)];
+                load_and_set(gl, vertdata, program); 
+                render_tri();
+                
+                vertdata = [vec2(-1, -1), vec2(1, 1), vec2(1, -1)];
+                load_and_set(gl, vertdata, program); 
+                render_tri();
 
                 /* 
                 // For each image in our image array
@@ -247,7 +232,7 @@ function beginRender() {
 
 // Load buffers and get ready to render
 function load_and_set(gl, vertdata, program) {
-     // Load data into GPU
+    // Load data into GPU
     var bufferID = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, bufferID);
     gl.bufferData(gl.ARRAY_BUFFER, flatten(vertdata), gl.STATIC_DRAW);
@@ -260,5 +245,5 @@ function load_and_set(gl, vertdata, program) {
 
 // Render a triangle
 function render_tri() {
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    gl.drawArrays(gl.TRIANGLES, 0, vertdata.length);
 }
