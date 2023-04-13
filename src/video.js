@@ -111,7 +111,7 @@ window.onload = async function init() {
                     console.log(images);
                     console.log("Image processed: Image #" + processed.toString());
                     processed++;
-                }});              
+                })});              
     
            
     // console.log(images);
