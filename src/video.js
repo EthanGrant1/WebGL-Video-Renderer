@@ -123,7 +123,7 @@ window.onload = function init() {
                 load_and_set(gl, vertdata, program); 
                 render_tri();
                 
-                vertdata = [vec2(-1, -1), vec2(1, 1), vec2(1, -1)];
+                vertdata = [vec2(-1, -1), vec2(1, -1), vec2(1, -1)];
                 load_and_set(gl, vertdata, program); 
                 render_tri();
 
