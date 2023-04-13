@@ -111,79 +111,66 @@ window.onload = async function init() {
                     console.log(myImages);
                     console.log("Image processed: Image #" + processed.toString());
                     processed++;
-                })});              
-    
-           
-    // console.log(images);
-    
-    // While images are still being processed, we will await them to complete
-
-    /*
-    console.log("changing canvas size")
-    // Remove 2D canvas from view
-    canvas2d.height = 1;
-    canvas2d.width = 1;
-    */
-    // Create render using WebGL primatives
-    // TODO: Move below code into render function
-    //
-    // beginRender()
-    
-    console.log("rendering");
+                })
+        }).then(
+            () => {
+                console.log("rendering");
 
     
-    // For each image in our image array
-    for (let i = 0; i < myImages.length; i++) {
+                // For each image in our image array
+                for (let i = 0; i < myImages.length; i++) {
         
-        console.log("entering color data loop");
+                    console.log("entering color data loop");
 
-        // X by Y pixel canvas
-        for (let x = 0; x < canvasGL.width; x++) {
-            for (let y = 0; y < canvasGL.height; y++) {
+                    // X by Y pixel canvas
+                    for (let x = 0; x < canvasGL.width; x++) {
+                        for (let y = 0; y < canvasGL.height; y++) {
                 
-                // Grab RGB values from color data and normalize to floats 0.0 - 1.0
-                let red     = myImages[i][x][y][0] / 255;
-                console.log("red: " + red.toString());
+                            // Grab RGB values from color data and normalize to floats 0.0 - 1.0
+                            let red     = myImages[i][x][y][0] / 255;
+                            console.log("red: " + red.toString());
+            
+                            let green   = myImages[i][x][y][1] / 255;
+                            console.log("green: " + green.toString());
+    
+                            let blue    = myImages[i][x][y][2] / 255;
+                            console.log("blue: " + blue.toString());
 
-                let green   = myImages[i][x][y][1] / 255;
-                console.log("green: " + green.toString());
-
-                let blue    = myImages[i][x][y][2] / 255;
-                console.log("blue: " + blue.toString());
-
-                // Set our color variable to values we grabbed from this pixel 
-                gl.uniform4f(u_Color, red, green, blue, 1);
+                            // Set our color variable to values we grabbed from this pixel 
+                            gl.uniform4f(u_Color, red, green, blue, 1);
                 
-                // Positions of vertices
-                let top_right_corner = vec2((x + 1) * xFac, y * yFac);
-                let bottom_left_corner = vec2(x * xFac, (y + 1) * yFac);
+                            // Positions of vertices
+                            let top_right_corner = vec2((x + 1) * xFac, y * yFac);
+                            let bottom_left_corner = vec2(x * xFac, (y + 1) * yFac);
 
-                load_and_set(
-                    gl, 
-                    [
-                        vec2(x * xFac, y * yFac),
-                        top_right_corner,
-                        bottom_left_corner
-                    ],
-                    program
-                );
+                            load_and_set(
+                                gl, 
+                                [
+                                    vec2(x * xFac, y * yFac),
+                                    top_right_corner,
+                                    bottom_left_corner
+                                ],
+                                program
+                            );
 
-                render_tri();
+                            render_tri();
 
-                load_and_set(
-                    gl,
-                    [
-                        bottom_left_corner,
-                        top_right_corner,
-                        vec2((x + 1) * xFac, (y + 1) * yFac)
-                    ],
-                    program
-                );
+                            load_and_set(
+                                gl,
+                                [
+                                    bottom_left_corner,
+                                    top_right_corner,
+                                    vec2((x + 1) * xFac, (y + 1) * yFac)
+                                ],
+                                program
+                            );
 
-                render_tri();
-            }
-        }
-    }
+                            render_tri();
+                        }
+                    }
+                }
+            });              
+           
 };
 
 // This function loads images asynchronously and returns them through a promise
