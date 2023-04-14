@@ -180,28 +180,24 @@ window.onload = function init() {
                             let bottom_left_corner = vec2(x * xFac, (y + 1) * yFac);
                             
                             // Prepare and render two triangles to form this square
-                            load_and_set(
-                                gl, 
+                            vertdata = 
                                 [
                                     vec2(x * xFac, y * yFac),   // top left
                                     top_right_corner,
                                     bottom_left_corner
-                                ],
-                                program
-                            );
+                                ];
 
+                            load_and_set(gl, vertdata, program);
                             render_tri();
 
-                            load_and_set(
-                                gl,
+                            vertdata =
                                 [
                                     top_right_corner,
                                     bottom_left_corner,
                                     vec2((x + 1) * xFac, (y + 1) * yFac)    // bottom right
-                                ],
-                                program
-                            );
+                                ];
 
+                            load_and_set(gl, vertdata, program);
                             render_tri();
                         }
                     }
