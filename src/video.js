@@ -31,6 +31,9 @@ var frame = 0;
 var xFac = 1/1280;
 var yFac = 1/720;
 
+// Compression factor used to shrink the pixel amount
+var compression = 5;
+
 // This will contain all of our image data
 var myImages = [];
 
@@ -158,8 +161,8 @@ window.onload = function init() {
                     console.log("entering color data loop");
 
                     // X by Y pixel canvas
-                    for (let x = 0; x < canvasGL.width; x++) {
-                        for (let y = 0; y < canvasGL.height; y++) {
+                    for (let x = 0; x < canvasGL.width / compression; x++) {
+                        for (let y = 0; y < canvasGL.height / compression; y++) {
                 
                             // Grab RGB values from color data and normalize to floats 0.0 - 1.0
                             let red     = myImages[i][x][y][0] / 255;
@@ -176,25 +179,26 @@ window.onload = function init() {
                 
                             // Positions of vertices on shared edge.
                             // Using x and y factors to normalize to values 0-1
-                            let top_right_corner = vec2((x + 1) * xFac, y * yFac);
-                            let bottom_left_corner = vec2(x * xFac, (y + 1) * yFac);
+                            let top_right_corner = vec2((x + 1) * (xFac * compression), y * (yFac * compression));
+                            let bottom_left_corner = vec2(x * (xFac * compression), (y + 1) * (yFac * compression));
                             
                             // Prepare and render two triangles to form this square
                             vertdata = 
                                 [
-                                    vec2(x * xFac, y * yFac),   // top left
+                                    vec2(x * (xFac * compression), y * (yFac * compression)), // top left
                                     top_right_corner,
                                     bottom_left_corner
                                 ];
 
                             load_and_set(gl, vertdata, program);
                             render_tri();
-
+                            
+                            vertdata = [];
                             vertdata =
                                 [
                                     top_right_corner,
                                     bottom_left_corner,
-                                    vec2((x + 1) * xFac, (y + 1) * yFac)    // bottom right
+                                    vec2((x + 1) * (xFac * compression), (y + 1) * (yFac * compression)) // bottom right
                                 ];
 
                             load_and_set(gl, vertdata, program);
