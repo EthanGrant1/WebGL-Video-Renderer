@@ -158,6 +158,8 @@ window.onload = function init() {
 
                 let compw = canvasGL.width / compression;
                 let comph = canvasGL.height / compression;
+                let red, green, blue;
+                red = green = blue = 0;
 
                 // For each image in our image array
                 for (let i = 0; i < myImages.length; i++) {
@@ -168,21 +170,18 @@ window.onload = function init() {
 
                     // Rows. Height values.
                     for (let y = 0; y < comph; y++) {
+                        
+                        console.log(red, green, blue);
 
                         // Cols. Width values.
                         for (let x = 0; x < compw; x++) {
 
-                            console.log("(" + y.toString() + ", " + x.toString() + ")");
+                            // console.log("(" + y.toString() + ", " + x.toString() + ")");
                 
                             // Grab RGB values from color data and normalize to floats 0.0 - 1.0
                             let red     = myImages[i][y][x][0] / 255;
-                            // console.log("red: " + red.toString());
-            
                             let green   = myImages[i][y][x][1] / 255;
-                            // console.log("green: " + green.toString());
-    
                             let blue    = myImages[i][y][x][2] / 255;
-                            // console.log("blue: " + blue.toString());
 
                             // Set our color variable to values we grabbed from this pixel 
                             gl.uniform4f(u_Color, red, green, blue, 1);
