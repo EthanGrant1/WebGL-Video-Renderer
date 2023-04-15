@@ -219,8 +219,8 @@ window.onload = function init() {
                             // Positions of vertices on shared edge.
                             // Using x and y factors to normalize to values 0-1
                             
-                            let top_right_corner = vec2(((normalx + (1 / compw))), normaly);
-                            let bottom_left_corner = vec2(normalx, (normaly + (1 / comph)));
+                            let top_right_corner = vec2(((normalx + (2 / compw))), normaly);
+                            let bottom_left_corner = vec2(normalx, (normaly + (2 / comph)));
                             
                             // Prepare and render two triangles to form this square
                             vertdata = 
@@ -238,7 +238,7 @@ window.onload = function init() {
                                 [
                                     top_right_corner,
                                     bottom_left_corner,
-                                    vec2((normalx + (1 / compw)), (normaly + (1 / comph))) // bottom right
+                                    vec2((normalx + (2 / compw)), (normaly + (2 / comph))) // bottom right
                                 ];
 
                             load_and_set(gl, vertdata, program);
