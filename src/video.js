@@ -191,7 +191,7 @@ window.onload = function init() {
                             // Left half. Negative x values.
                             if (x <= (compw / 2)) {
                                 // x = 0 -> normal x = -1, x = width / 2 -> normal x = 0
-                                normalx = -(((compw/2) - x) / (compw / 2));  
+                                normalx = -(((compw / 2) - x) / (compw / 2));  
                             }
 
                             // Right half. Positive x values.
@@ -205,7 +205,7 @@ window.onload = function init() {
                             // so the y index value will increase as we go lower
                             if (y <= (comph / 2)) {
                                 // y tends towards 0
-                                normaly = (y + (comph / 2)) / (comph / 2);
+                                normaly = ((comph / 2) - y) / (comph / 2);
                             }
 
                             // Bottom half. Negative y values.
