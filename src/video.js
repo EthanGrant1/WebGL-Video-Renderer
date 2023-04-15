@@ -165,17 +165,23 @@ window.onload = function init() {
                     console.log("entering color data loop");
 
                     // X by Y pixel canvas
-                    for (let x = 0; x < compw; x++) {
-                        for (let y = 0; y < comph; y++) {
+
+                    // Rows. Height values.
+                    for (let y = 0; y < comph; y++) {
+
+                        // Cols. Width values.
+                        for (let x = 0; x < compw; x++) {
+
+                            console.log("(" + y.toString() + ", " + x.toString() + ")");
                 
                             // Grab RGB values from color data and normalize to floats 0.0 - 1.0
-                            let red     = myImages[i][x][y][0] / 255;
+                            let red     = myImages[i][y][x][0] / 255;
                             // console.log("red: " + red.toString());
             
-                            let green   = myImages[i][x][y][1] / 255;
+                            let green   = myImages[i][y][x][1] / 255;
                             // console.log("green: " + green.toString());
     
-                            let blue    = myImages[i][x][y][2] / 255;
+                            let blue    = myImages[i][y][x][2] / 255;
                             // console.log("blue: " + blue.toString());
 
                             // Set our color variable to values we grabbed from this pixel 
