@@ -68,7 +68,7 @@ window.onload = function init() {
     gl.viewport(0, 0, canvasGL.width, canvasGL.height);
 
     // Specify the color used when clearing color buffers
-    gl.clearColor(1.0, 1.0, 1.0, 1.0);
+    gl.clearColor(1.0, 0.0, 1.0, 1.0);
     
     // Initialize our shaders
     var program = initShaders(gl, 'vertex-shader', 'fragment-shader');
@@ -163,15 +163,11 @@ window.onload = function init() {
 
                 // For each image in our image array
                 for (let i = 0; i < myImages.length; i++) {
-        
-                    console.log("entering color data loop");
 
                     // X by Y pixel canvas
 
                     // Rows. Height values.
                     for (let y = 0; y < comph; y++) {
-                        
-                        console.log(red, green, blue);
 
                         // Cols. Width values.
                         for (let x = 0; x < compw; x++) {
