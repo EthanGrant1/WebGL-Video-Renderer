@@ -68,7 +68,7 @@ window.onload = function init() {
     gl.viewport(0, 0, canvasGL.width, canvasGL.height);
 
     // Specify the color used when clearing color buffers
-    gl.clearColor(1.0, 0.0, 1.0, 1.0);
+    gl.clearColor(1.0, 1.0, 1.0, 1.0);
     
     // Initialize our shaders
     var program = initShaders(gl, 'vertex-shader', 'fragment-shader');
@@ -175,9 +175,12 @@ window.onload = function init() {
                             // console.log("(" + y.toString() + ", " + x.toString() + ")");
                 
                             // Grab RGB values from color data and normalize to floats 0.0 - 1.0
-                            let red     = myImages[i][y][x][0] / 255;
-                            let green   = myImages[i][y][x][1] / 255;
-                            let blue    = myImages[i][y][x][2] / 255;
+                            let compx = x * compression;
+                            let compy = y * compression;
+
+                            let red     = myImages[i][compy][compx][0] / 255;
+                            let green   = myImages[i][compy][compx][1] / 255;
+                            let blue    = myImages[i][compy][compx][2] / 255;
 
                             // Set our color variable to values we grabbed from this pixel 
                             gl.uniform4f(u_Color, red, green, blue, 1);
