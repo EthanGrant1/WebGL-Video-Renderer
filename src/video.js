@@ -202,14 +202,14 @@ window.onload = function init() {
                             // Top half. Positive y values. Note that we are
                             // processing the pixels from the top down,
                             // so the y index value will increase as we go lower
-                            if (y <= (compy / 2)) {
+                            if (y <= (comph / 2)) {
                                 // y tends towards 0
-                                normaly = (y + (compy / 2)) / (compy / 2);
+                                normaly = (y + (comph / 2)) / (comph / 2);
                             }
 
                             // Bottom half. Negative y values.
                             else {
-                                normaly = -((y - (compy / 2)) / (compy / 2));
+                                normaly = -((y - (comph / 2)) / (comph / 2));
                             }
                 
                             // Positions of vertices on shared edge.
