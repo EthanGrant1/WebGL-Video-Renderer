@@ -154,38 +154,74 @@ window.onload = function init() {
                  * render_tri();
                  */
 
-                console.log("here 1")
+                console.log("here 1");
+
+                let compw = canvasGL.width / compression;
+                let comph = canvasGL.height / compression;
+
                 // For each image in our image array
                 for (let i = 0; i < myImages.length; i++) {
         
                     console.log("entering color data loop");
 
                     // X by Y pixel canvas
-                    for (let x = 0; x < canvasGL.width / compression; x++) {
-                        for (let y = 0; y < canvasGL.height / compression; y++) {
+                    for (let x = 0; x < compw; x++) {
+                        for (let y = 0; y < comph; y++) {
                 
                             // Grab RGB values from color data and normalize to floats 0.0 - 1.0
                             let red     = myImages[i][x][y][0] / 255;
-                            console.log("red: " + red.toString());
+                            // console.log("red: " + red.toString());
             
                             let green   = myImages[i][x][y][1] / 255;
-                            console.log("green: " + green.toString());
+                            // console.log("green: " + green.toString());
     
                             let blue    = myImages[i][x][y][2] / 255;
-                            console.log("blue: " + blue.toString());
+                            // console.log("blue: " + blue.toString());
 
                             // Set our color variable to values we grabbed from this pixel 
                             gl.uniform4f(u_Color, red, green, blue, 1);
+
+                            // Normalized values for x and y values on the
+                            // WebGL grid.
+                            
+                            let normalx = 0;
+                            let normaly = 0;
+
+                            // Left half. Negative x values.
+                            if (x <= (compw / 2)) {
+                                // x = 0 -> normal x = -1, x = width / 2 -> normal x = 0
+                                normalx = -(((compw/2) - x) / (compw / 2));  
+                            }
+
+                            // Right half. Positive x values.
+                            else {
+                                // x tends towards 1
+                                normalx = (x - (compw / 2)) / (compw / 2);
+                            }
+
+                            // Top half. Positive y values. Note that we are
+                            // processing the pixels from the top down,
+                            // so the y index value will increase as we go lower
+                            if (y <= (compy / 2)) {
+                                // y tends towards 0
+                                normaly = (y + (compy / 2)) / (compy / 2);
+                            }
+
+                            // Bottom half. Negative y values.
+                            else {
+                                normaly = -((y - (compy / 2)) / (compy / 2));
+                            }
                 
                             // Positions of vertices on shared edge.
                             // Using x and y factors to normalize to values 0-1
-                            let top_right_corner = vec2((x + 1) * (xFac * compression), y * (yFac * compression));
-                            let bottom_left_corner = vec2(x * (xFac * compression), (y + 1) * (yFac * compression));
+                            
+                            let top_right_corner = vec2(((normalx + 1) * xFac) * compression, (normaly * yFac));
+                            let bottom_left_corner = vec2(normalx * xFac, ((normaly + 1) * yFac) * compression);
                             
                             // Prepare and render two triangles to form this square
                             vertdata = 
                                 [
-                                    vec2(x * (xFac * compression), y * (yFac * compression)), // top left
+                                    vec2(normalx * xFac, normaly * yFac), // top left
                                     top_right_corner,
                                     bottom_left_corner
                                 ];
@@ -198,7 +234,7 @@ window.onload = function init() {
                                 [
                                     top_right_corner,
                                     bottom_left_corner,
-                                    vec2((x + 1) * (xFac * compression), (y + 1) * (yFac * compression)) // bottom right
+                                    vec2(((normalx + 1) * xFac) * compression, ((normaly + 1) * yFac) * compression) // bottom right
                                 ];
 
                             load_and_set(gl, vertdata, program);
