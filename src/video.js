@@ -77,8 +77,8 @@ window.onload = function init() {
     // Location of color var
     var u_Color = gl.getUniformLocation(program, "u_Color");
     let imageColors = Array.from(Array(720), () => new Array(1280));
-    console.log("image colors");
-    console.log(imageColors);
+    // console.log("image colors");
+    // console.log(imageColors);
     
     // Load all of images and place them in an array of promises
     for (let i = 18; i < 19; i++) {
@@ -154,7 +154,7 @@ window.onload = function init() {
                  * render_tri();
                  */
 
-                console.log("here 1");
+                // console.log("here 1");
 
                 let compw = canvasGL.width / compression;
                 let comph = canvasGL.height / compression;
@@ -216,13 +216,13 @@ window.onload = function init() {
                             // Positions of vertices on shared edge.
                             // Using x and y factors to normalize to values 0-1
                             
-                            let top_right_corner = vec2(((normalx + 1) * xFac) * compression, (normaly * yFac));
-                            let bottom_left_corner = vec2(normalx * xFac, ((normaly + 1) * yFac) * compression);
+                            let top_right_corner = vec2(((normalx + (1 / compw))), normaly);
+                            let bottom_left_corner = vec2(normalx, (normaly + (1 / comph)));
                             
                             // Prepare and render two triangles to form this square
                             vertdata = 
                                 [
-                                    vec2(normalx * xFac, normaly * yFac), // top left
+                                    vec2(normalx, normaly), // top left
                                     top_right_corner,
                                     bottom_left_corner
                                 ];
@@ -235,7 +235,7 @@ window.onload = function init() {
                                 [
                                     top_right_corner,
                                     bottom_left_corner,
-                                    vec2(((normalx + 1) * xFac) * compression, ((normaly + 1) * yFac) * compression) // bottom right
+                                    vec2((normalx + (1 / compw)), (normaly + (1 / comph))) // bottom right
                                 ];
 
                             load_and_set(gl, vertdata, program);
