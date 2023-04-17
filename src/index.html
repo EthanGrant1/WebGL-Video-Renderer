@@ -7,32 +7,25 @@
 
 <!-- Define our shaders -->
 <script id="vertex-shader" type="x-shader/x-vertex">
-    
-    attribute vec2 aPosition;
-    attribute vec4 aColor;
 
-    uniform mat3 uMatrix;
-
-    varying vec4 vColor;
-
-    void main() {
-        gl_Position = vec4((uMatrix * vec3(aPosition, 1)).xy, 0, 1);
-        vColor = aColor;
+    attribute vec4 vPosition; 
+    void main() { 
+        gl_Position = vPosition; 
     }
 
 </script>
 
 <!-- 
-    vColor is a varying vec4 that we can set at
+    u_Color is a mutable variable that we can set at
     any time during rendering, so we are not forced to use
     one static color.
 -->
 <script id="fragment-shader" type="x-shader/x-fragment">
 
     precision mediump float; 
-    varying vec4 vColor;
+    uniform vec4 u_Color;
     void main() { 
-        gl_FragColor = vColor; 
+        gl_FragColor = u_Color; 
     }
 
 </script>
@@ -41,18 +34,17 @@
 <script src="../libraries/Common/webgl-utils.js"></script>
 <script src="../libraries/Common/initShaders.js"></script>
 <script src="../libraries/Common/MV.js"></script>
-<script src="https://webglfundamentals.org/webgl/resources/m3.js"></script>
 
 <!-- Our drawing script -->
 <script src="./video.js"></script>
 </head>
 
 <body>
-    <canvas id="2d-canvas" width="360" height="360">
+    <canvas id="2d-canvas" width="1280" height="720">
         Your browser does not support HTML5!
     </canvas>
 
-    <canvas id="gl-canvas" width="360" height="360">
+    <canvas id="gl-canvas" width="1280" height="720">
         Your browser does not support HTML5!
     </canvas>
 </body>
