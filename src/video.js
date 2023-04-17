@@ -73,8 +73,8 @@ window.onload = function init() {
     matrixLocation = contextGL.getUniformLocation(program, "uMatrix");
     
     positionBuf = contextGL.createBuffer();
-    for (let y = 0; y < canvasGL.height, y++) {
-        for (let x = 0; x < canvasGL.width, x++) {
+    for (let y = 0; y < canvasGL.height; y++) {
+        for (let x = 0; x < canvasGL.width; x++) {
             let temp = new Float32Array([
                 x, y,
                 (x + 1), y,
