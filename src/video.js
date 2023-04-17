@@ -63,7 +63,7 @@ window.onload = function init() {
     contextGL.clearColor(1.0, 1.0, 1.0, 1.0);
     
     // Initialize our shaders
-    var program = initShaders(cotextGL, 'vertex-shader', 'fragment-shader');
+    var program = initShaders(contextGL, 'vertex-shader', 'fragment-shader');
     contextGL.useProgram(program);
     
     // Location of WebGL variables
