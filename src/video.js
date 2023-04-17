@@ -18,7 +18,11 @@ var canvasGL;
 // Important variables for GL canvas
 var gl;
 var render;
-var vertdata;   
+var positionLocation;
+var colorLocation;
+var matrixLocation;
+var positionBuf;
+var colorBuf;
 
 // Contexts used to draw images to the canvas
 var context2d;
@@ -26,13 +30,6 @@ var contextGL;
 
 // Current frame being worked on
 var frame = 0;
-
-// Float factors used for noramalizing WebGL grid for 720x1280 video
-var xFac = 1/1280;
-var yFac = 1/720;
-
-// Compression factor used to shrink the pixel amount
-var compression = 5;
 
 // This will contain all of our image data
 var myImages = [];
@@ -43,7 +40,6 @@ var promises = [];
 // Number of processed images and total number of images
 // var processed = 0;
 var dirLen = 6108;
-
 
 // Exectutes WebGL code after webpage is loaded, so we can
 // execute this code anywhere in our webpage and wait until
@@ -58,31 +54,49 @@ window.onload = function init() {
     context2d = canvas2d.getContext("2d")
     contextGL = canvasGL.getContext("webgl");
 
-    // Set up WebGL on GL canvas
-    gl = WebGLUtils.setupWebGL(canvasGL);    
-    if (!gl) { alert("WebGL unavailable"); }
-    
     // Configuring core WebGL components on GL canvas
 
     // Set viewport origin (x, y), and size of the viewport (height, width)
-    gl.viewport(0, 0, canvasGL.width, canvasGL.height);
+    contextGL.viewport(0, 0, canvasGL.width, canvasGL.height);
 
     // Specify the color used when clearing color buffers
-    gl.clearColor(1.0, 1.0, 1.0, 1.0);
+    contextGL.clearColor(1.0, 1.0, 1.0, 1.0);
     
     // Initialize our shaders
     var program = initShaders(gl, 'vertex-shader', 'fragment-shader');
-    gl.useProgram(program);
+    contextGL.useProgram(program);
     
-    // Location of color var
-    var u_Color = gl.getUniformLocation(program, "u_Color");
+    // Location of WebGL variables
+    positionLocation = contextGL.getAttribLocation(program, "aPosition");
+    colorLocation = contextGL.getUniformLocation(program, "aColor");
+
+    matrixLocation = contextGL.getUniformLocation(program, "uMatrix");
+    
+    positionBuf = contextGL.createBuffer();
+    for (let y = 0; y < canvasGL.height, y++) {
+        for (let x = 0; x < canvasGL.width, x++) {
+            let temp = new Float32Array([
+                x, y,
+                (x + 1), y,
+                x, (y + 1),
+                (x + 1), y,
+                x, (y + 1),
+                (x + 1), (y + 1)
+            ]);
+
+            positionBuf = positionBuf.concat(temp);        
+        }
+    }
+
+    colorBuf = contextGL.createBuffer();
+
     let imageColors = Array.from(Array(720), () => new Array(1280));
     // console.log("image colors");
     // console.log(imageColors);
     
     // Load all of images and place them in an array of promises
-    for (let i = 18; i < 19; i++) {
-        promises.push(loadImage("frames/frame" + i.toString() + ".jpg"));
+    for (let i = 0; i < 1; i++) {
+        promises.push(loadImage("frames/soup" + i.toString() + ".jpg"));
     }
 
     // Await all image loading promises to resolve
@@ -156,95 +170,43 @@ window.onload = function init() {
 
                 // console.log("here 1");
 
-                let compw = canvasGL.width / compression;
-                let comph = canvasGL.height / compression;
                 let red, green, blue;
                 red = green = blue = 0;
 
                 // For each image in our image array
                 for (let i = 0; i < myImages.length; i++) {
 
+                    colorBuf = [];
+
                     // X by Y pixel canvas
 
                     // Rows. Height values.
-                    for (let y = 0; y < comph; y++) {
+                    for (let y = 0; y < canvasGL.height; y++) {
 
                         // Cols. Width values.
-                        for (let x = 0; x < compw; x++) {
+                        for (let x = 0; x < canvasGL.width; x++) {
 
                             // console.log("(" + y.toString() + ", " + x.toString() + ")");
                 
-                            // Grab RGB values from color data and normalize to floats 0.0 - 1.0
-                            let compx = x * compression;
-                            let compy = y * compression;
+                            let red     = myImages[i][y][x][0] / 255;
+                            let green   = myImages[i][y][x][1] / 255;
+                            let blue    = myImages[i][y][x][2] / 255;
 
-                            let red     = myImages[i][compy][compx][0] / 255;
-                            let green   = myImages[i][compy][compx][1] / 255;
-                            let blue    = myImages[i][compy][compx][2] / 255;
-
-                            // Set our color variable to values we grabbed from this pixel 
-                            gl.uniform4f(u_Color, red, green, blue, 1);
-
-                            // Normalized values for x and y values on the
-                            // WebGL grid.
-                            
-                            let normalx = 0;
-                            let normaly = 0;
-
-                            // Left half. Negative x values.
-                            if (x <= (compw / 2)) {
-                                // x = 0 -> normal x = -1, x = width / 2 -> normal x = 0
-                                normalx = -(((compw / 2) - x) / (compw / 2));  
-                            }
-
-                            // Right half. Positive x values.
-                            else {
-                                // x tends towards 1
-                                normalx = (x - (compw / 2)) / (compw / 2);
-                            }
-
-                            // Top half. Positive y values. Note that we are
-                            // processing the pixels from the top down,
-                            // so the y index value will increase as we go lower
-                            if (y <= (comph / 2)) {
-                                // y tends towards 0
-                                normaly = ((comph / 2) - y) / (comph / 2);
-                            }
-
-                            // Bottom half. Negative y values.
-                            else {
-                                normaly = -((y - (comph / 2)) / (comph / 2));
-                            }
-                
-                            // Positions of vertices on shared edge.
-                            // Using x and y factors to normalize to values 0-1
-                            
-                            let top_right_corner = vec2(((normalx + (2 / compw))), normaly);
-                            let bottom_left_corner = vec2(normalx, (normaly + (2 / comph)));
-                            
-                            // Prepare and render two triangles to form this square
-                            vertdata = 
-                                [
-                                    vec2(normalx, normaly), // top left
-                                    top_right_corner,
-                                    bottom_left_corner
-                                ];
-
-                            load_and_set(gl, vertdata, program);
-                            render_tri();
-                            
-                            vertdata = [];
-                            vertdata =
-                                [
-                                    top_right_corner,
-                                    bottom_left_corner,
-                                    vec2((normalx + (2 / compw)), (normaly + (2 / comph))) // bottom right
-                                ];
-
-                            load_and_set(gl, vertdata, program);
-                            render_tri();
+                            colorBuf = coloBuf.concat(new Float32Array([
+                                red, green, blue, 1,
+                                red, green, blue, 1,
+                                red, green, blue, 1,
+                                red, green, blue, 1,
+                                red, green, blue, 1,
+                                red, green, blue, 1
+                            ]));
                         }
                     }
+
+                    contextGL.bindBuffer(contextGL.ARRAY_BUFFER, colorBuf);
+                    setupBuf(contextGL, colorBuf);
+                    
+                    draw();
                 }
             }); 
 };
@@ -267,6 +229,25 @@ function loadImage(src) {
         // If something goes wrong, the promise is rejected
         img.onerror = reject;
     });
+}
+
+function setupBuf(gl, buf) {
+    gl.bufferdata(gl.ARRAY_BUFFER, buf, gl.STATIC_DRAW);
+}
+
+function draw() {
+    contextGL.enableVertexAttribArray(positionLocation);
+    contextGL.bindBuffer(contextGL.ARRAY_BUFFER, positionBuf);
+    contextGL.vertexAttribPointer(positionLocation, 2, contextGL.FLOAT, false, 0, 0);
+
+    contextGL.enableVertexAttribArray(colorLocation);
+    contextGL.bindBuffer(contextGL.ARRAY_BUFFER, colorBuf);
+    contextGL.vertexAttribPointer(colorLocation, 4, contextGL.FLOAT, false, 0, 0);
+
+    var matrix = m3.projection(contextGL.canvas.clientWidth, contextGL.canvas.clientHeight);
+    contextGL.uniformMatrix3fv(matrixLocation, false, matrix);
+
+    contextGL.drawArrays(contextGL.TRIANGLES, 0, (positionBuf.length / 2));
 }
 
 function beginRender() {
@@ -308,3 +289,34 @@ function load_and_set(gl, vertdata, program) {
 
 // Render a triangle given our vertex data
 function render_tri() { gl.drawArrays(gl.TRIANGLES, 0, vertdata.length); }
+
+Float32Array.prototype.concat = function() {
+	var bytesPerIndex = 4, buffers = Array.prototype.slice.call(arguments);
+	
+	// add self
+	buffers.unshift(this);
+
+	buffers = buffers.map(function (item) {
+		if (item instanceof Float32Array) {
+			return item.buffer;
+		}
+
+		else {
+			throw new Error('You can only concat Float32Array');
+		}
+	});
+
+	var concatenatedByteLength = buffers
+		.map(function (a) {return a.byteLength;})
+		.reduce(function (a,b) {return a + b;}, 0);
+
+	var concatenatedArray = new Float32Array(concatenatedByteLength / bytesPerIndex);
+
+	var offset = 0;
+	buffers.forEach(function (buffer, index) {
+		concatenatedArray.set(new Float32Array(buffer), offset);
+		offset += buffer.byteLength / bytesPerIndex;
+	});
+
+	return concatenatedArray;
+};
