@@ -176,7 +176,7 @@ window.onload = function init() {
                 // For each image in our image array
                 for (let i = 0; i < myImages.length; i++) {
 
-                    colorBuf = [];
+                    colorBuf = new Float32Array();
 
                     // X by Y pixel canvas
 
