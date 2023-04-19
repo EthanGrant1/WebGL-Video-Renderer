@@ -32,7 +32,7 @@ var xFac = 1/1280;
 var yFac = 1/720;
 
 // Compression factor used to shrink the pixel amount
-var compression = 5;
+var compression = 2;
 
 // This will contain all of our image data
 var myImages = [];
@@ -81,9 +81,14 @@ window.onload = function init() {
     // console.log(imageColors);
     
     // Load all of images and place them in an array of promises
+
+    /*
     for (let i = 18; i < 19; i++) {
         promises.push(loadImage("frames/frame" + i.toString() + ".jpg"));
     }
+    */
+    
+    promises.push(loadImage("soup0.jpg"));
 
     // Await all image loading promises to resolve
     Promise.all(promises).then(
