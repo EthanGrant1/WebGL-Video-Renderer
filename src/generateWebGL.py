@@ -1,3 +1,12 @@
+####################################
+# This is a python script that was #
+# used to automatically generate   #
+# a large amount of WebGL code.    #
+# This ultimately went unused      #
+# because loading the js file was  #
+# too large. It was very slow.     #
+####################################
+
 import os
 import numpy as n
 from PIL import Image as i
@@ -14,7 +23,7 @@ def getColors(path):
     
     # Get number of color channels
     if image.mode == "RGB": c = 3
-    
+
     elif image.mode == "L": c = 1
     
     else:
