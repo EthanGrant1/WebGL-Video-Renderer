@@ -28,8 +28,8 @@ var contextGL;
 var frame = 0;
 
 // Float factors used for noramalizing WebGL grid for 720x1280 video
-var xFac = 1/1280;
-var yFac = 1/720;
+var xFac = 1/360;
+var yFac = 1/360;
 
 // Compression factor used to shrink the pixel amount
 var compression = 2;
@@ -76,7 +76,7 @@ window.onload = function init() {
     
     // Location of color var
     var u_Color = gl.getUniformLocation(program, "u_Color");
-    let imageColors = Array.from(Array(720), () => new Array(1280));
+    let imageColors = Array.from(Array(360), () => new Array(360));
     // console.log("image colors");
     // console.log(imageColors);
     
@@ -88,7 +88,7 @@ window.onload = function init() {
     }
     */
     
-    promises.push(loadImage("soup0.jpg"));
+    promises.push(loadImage("frames/soup0.jpg"));
 
     // Await all image loading promises to resolve
     Promise.all(promises).then(
